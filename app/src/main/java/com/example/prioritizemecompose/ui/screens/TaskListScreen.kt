@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -26,16 +27,16 @@ import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -69,30 +70,42 @@ fun TaskListScreen(){
         topBar = {
             TopAppBar(
                 title = {
-                    TextField(
+                    OutlinedTextField(
                         value = "",
                         singleLine = true,
                         shape = MaterialTheme.shapes.small,
                         modifier = Modifier.fillMaxWidth(),
-                        colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.surface),
+                        colors = TextFieldDefaults.textFieldColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        ),
                         onValueChange = {},
                         label = { Text(text = "Filtruj")}
                     )
                 },
                 actions = {
-                    IconButton(onClick = { /* doSomething() */ }) {
+                    FilledTonalIconButton(
+                        onClick = { /* doSomething() */ },
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = Color(100,149,237)
+                        ),
+                        shape = FloatingActionButtonDefaults.smallShape,
+                        modifier = Modifier.padding(top = 10.dp, start = 4.dp)
+                    ) {
                         Icon(
                             imageVector = Icons.Filled.Filter,
-                            contentDescription = "Sorting Options"
+                            contentDescription = "Sorting Options",
+                            tint = Color.Black
                         )
                     }
-                }
+                },
+                modifier = Modifier.height(60.dp)
             )
         }
     ) { paddingValues ->
         Box(modifier = Modifier
             .fillMaxSize()
-            .padding(paddingValues).padding(top = 8.dp)) {
+            .padding(paddingValues)
+            .padding(top = 12.dp)) {
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Adaptive(200.dp),
                 verticalItemSpacing = 8.dp,

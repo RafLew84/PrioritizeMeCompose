@@ -44,194 +44,234 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.prioritizemecompose.data.Task
 import com.example.prioritizemecompose.data.dummydata.DataProvider
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun TaskListScreen(){
+fun TaskListScreen() {
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { /* ... */ },
-                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(10.dp),
-                containerColor = Color(100,149,237),
-                shape = FloatingActionButtonDefaults.smallShape
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = "Add item"
-                )
-            }
+            AddTaskFAB(onClick = { /* TODO */} )
         },
         topBar = {
             TopAppBar(
-                title = {
-                    OutlinedTextField(
-                        value = "",
-                        singleLine = true,
-                        shape = MaterialTheme.shapes.small,
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = TextFieldDefaults.textFieldColors(
-                            containerColor = MaterialTheme.colorScheme.surface
-                        ),
-                        onValueChange = {},
-                        label = { Text(text = "Filtruj")}
-                    )
-                },
-                actions = {
-                    FilledTonalIconButton(
-                        onClick = { /* doSomething() */ },
-                        colors = IconButtonDefaults.iconButtonColors(
-                            containerColor = Color(100,149,237)
-                        ),
-                        shape = FloatingActionButtonDefaults.smallShape,
-                        modifier = Modifier.padding(top = 10.dp, start = 4.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Filter,
-                            contentDescription = "Sorting Options",
-                            tint = Color.Black
-                        )
-                    }
-                },
+                title = { FilteringEditText() },
+                actions = { PrioritySorting() },
                 modifier = Modifier.height(60.dp)
             )
         }
     ) { paddingValues ->
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)
-            .padding(top = 12.dp)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(top = 12.dp)
+        ) {
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Adaptive(200.dp),
                 verticalItemSpacing = 8.dp,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 content = {
                     items(DataProvider.tasks.size) { index ->
-                        Card(
-                            shape = RoundedCornerShape(15.dp),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
-                        ) {
-                            Column(
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .background(Color(147, 176, 230))
-
-                                ) {
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth(),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Text(
-                                            text = DataProvider.tasks[index].title,
-                                            fontWeight = FontWeight.Bold,
-                                            style = MaterialTheme.typography.titleMedium,
-                                            modifier = Modifier
-                                                .padding(4.dp)
-                                                .weight(1f),
-                                            fontSize = 16.sp,
-                                            textAlign = TextAlign.Center,
-                                        )
-
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxHeight()
-                                                .padding(end = 4.dp)
-                                        )
-                                        {
-                                            Card(
-                                                elevation = CardDefaults.cardElevation(10.dp),
-                                                colors = CardDefaults.cardColors(
-                                                    containerColor = Color(0xFF6650a4)
-                                                )
-                                            ) {
-                                                Image(
-                                                    imageVector = Icons.Default.Circle,
-                                                    contentDescription = "Priority",
-                                                    colorFilter = ColorFilter.tint(
-                                                        Color(
-                                                            128,
-                                                            203,
-                                                            196
-                                                        )
-                                                    )
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-                                Text(
-                                    text = DataProvider.tasks[index].description,
-                                    modifier = Modifier.padding(4.dp),
-                                    fontSize = 14.sp
-                                )
-
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 8.dp, bottom = 8.dp),
-                                    Arrangement.SpaceEvenly
-                                ) {
-                                    OutlinedIconButton(
-                                        onClick = { /*TODO*/ },
-                                        enabled = true,
-                                        modifier = Modifier.size(30.dp),
-                                        border = BorderStroke(2.dp, Color(0xFF6650a4)),
-                                        colors = IconButtonDefaults.iconButtonColors(
-                                            contentColor = Color(0xFF6650a4),
-                                        ),
-                                        content = {
-                                            Icon(
-                                                imageVector = Icons.Outlined.KeyboardArrowUp,
-                                                contentDescription = "Higher priority"
-                                            )
-                                        }
-                                    )
-                                    OutlinedIconButton(
-                                        onClick = { /*TODO*/ },
-                                        enabled = true,
-                                        modifier = Modifier.size(30.dp),
-                                        colors = IconButtonDefaults.iconButtonColors(
-                                            contentColor = Color(0xFF6650a4),
-                                        ),
-                                        border = BorderStroke(2.dp, Color(0xFF6650a4)),
-                                        content = {
-                                            Icon(
-                                                imageVector = Icons.Outlined.Done,
-                                                contentDescription = " Done"
-                                            )
-                                        }
-                                    )
-                                    OutlinedIconButton(
-                                        onClick = { /*TODO*/ },
-                                        enabled = true,
-                                        modifier = Modifier.size(30.dp),
-                                        border = BorderStroke(2.dp, Color(0xFF6650a4)),
-                                        colors = IconButtonDefaults.iconButtonColors(
-                                            contentColor = Color(0xFF6650a4),
-                                        ),
-                                        content = {
-                                            Icon(
-                                                imageVector = Icons.Outlined.KeyboardArrowDown,
-                                                contentDescription = "Lower priority"
-                                            )
-                                        }
-                                    )
-                                }
-                            }
-                        }
+                        CreateItemCard(
+                            onClickHigherPriority = { /*TODO()*/ },
+                            onClickDone = { /*TODO()*/ },
+                            onClickLowerPriority = { /*TODO()*/ },
+                            task = DataProvider.tasks[index]
+                        )
                     }
                 },
                 modifier = Modifier.fillMaxSize()
             )
         }
     }
+}
+
+@Composable
+private fun AddTaskFAB(
+    onClick: () -> Unit
+) {
+    FloatingActionButton(
+        onClick = onClick,
+        elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(10.dp),
+        containerColor = Color(100, 149, 237),
+        shape = FloatingActionButtonDefaults.smallShape
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Add,
+            contentDescription = "Add item"
+        )
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun FilteringEditText() {
+    OutlinedTextField(
+        value = "",
+        singleLine = true,
+        shape = MaterialTheme.shapes.small,
+        modifier = Modifier.fillMaxWidth(),
+        colors = TextFieldDefaults.textFieldColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        onValueChange = {},
+        label = { Text(text = "Filtruj") }
+    )
+}
+
+@Composable
+private fun PrioritySorting() {
+    FilledTonalIconButton(
+        onClick = { /* doSomething() */ },
+        colors = IconButtonDefaults.iconButtonColors(
+            containerColor = Color(100, 149, 237)
+        ),
+        shape = FloatingActionButtonDefaults.smallShape,
+        modifier = Modifier.padding(top = 10.dp, start = 4.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Filter,
+            contentDescription = "Sorting Options",
+            tint = Color.Black
+        )
+    }
+}
+
+@Composable
+private fun CreateItemCard(
+    onClickHigherPriority: () -> Unit,
+    onClickDone: () -> Unit,
+    onClickLowerPriority: () -> Unit,
+    task: Task
+) {
+    Card(
+        shape = RoundedCornerShape(15.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            CardTitle(task.title)
+            Text(
+                text = task.description,
+                modifier = Modifier.padding(4.dp),
+                fontSize = 14.sp
+            )
+
+            ButtonsRow(
+                onClickHigherPriority = onClickHigherPriority,
+                onClickDone = onClickDone,
+                onClickLowerPriority = onClickLowerPriority,
+            )
+
+        }
+    }
+}
+
+@Composable
+private fun CardTitle(title: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color(147, 176, 230))
+
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = title,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier
+                    .padding(4.dp)
+                    .weight(1f),
+                fontSize = 16.sp,
+                textAlign = TextAlign.Center,
+            )
+
+            CreatePriorityIcon(Color(128, 203, 196))
+        }
+    }
+}
+
+@Composable
+private fun CreatePriorityIcon(color: Color) {
+    Box(
+        modifier = Modifier
+            .fillMaxHeight()
+            .padding(end = 4.dp)
+    )
+    {
+        Card(
+            elevation = CardDefaults.cardElevation(10.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color(0xFF6650a4)
+            )
+        ) {
+            Image(
+                imageVector = Icons.Default.Circle,
+                contentDescription = "Priority",
+                colorFilter = ColorFilter.tint(color)
+            )
+        }
+    }
+}
+
+@Composable
+private fun ButtonsRow(
+    onClickHigherPriority: () -> Unit,
+    onClickDone: () -> Unit,
+    onClickLowerPriority: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp, bottom = 8.dp),
+        Arrangement.SpaceEvenly
+    ) {
+        CreateOutlinedIconButton(
+            onClick = onClickHigherPriority,
+            icon = Icons.Outlined.KeyboardArrowUp
+        )
+        CreateOutlinedIconButton(
+            onClick = onClickDone,
+            icon = Icons.Outlined.Done
+        )
+        CreateOutlinedIconButton(
+            onClick = onClickLowerPriority,
+            icon = Icons.Outlined.KeyboardArrowDown
+        )
+    }
+}
+
+@Composable
+private fun CreateOutlinedIconButton(
+    onClick: () -> Unit,
+    icon: ImageVector
+) {
+    OutlinedIconButton(
+        onClick = onClick,
+        enabled = true,
+        modifier = Modifier.size(30.dp),
+        border = BorderStroke(2.dp, Color(0xFF6650a4)),
+        colors = IconButtonDefaults.iconButtonColors(
+            contentColor = Color(0xFF6650a4),
+        ),
+        content = {
+            Icon(
+                imageVector = icon,
+                contentDescription = "Lower priority"
+            )
+        }
+    )
 }

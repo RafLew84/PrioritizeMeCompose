@@ -17,17 +17,27 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material.icons.filled.Filter
 import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,127 +49,176 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.prioritizemecompose.data.dummydata.DataProvider
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListScreen(){
-    LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Adaptive(200.dp),
-        verticalItemSpacing = 8.dp,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        content = {
-            items(DataProvider.tasks.size) { index ->
-                Card(
-                    shape = RoundedCornerShape(15.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(Color(147, 176, 230))
-
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { /* ... */ },
+                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(10.dp),
+                containerColor = Color(100,149,237),
+                shape = FloatingActionButtonDefaults.smallShape
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Add item"
+                )
+            }
+        },
+        topBar = {
+            TopAppBar(
+                title = {
+                    TextField(
+                        value = "",
+                        singleLine = true,
+                        shape = MaterialTheme.shapes.small,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.surface),
+                        onValueChange = {},
+                        label = { Text(text = "Filtruj")}
+                    )
+                },
+                actions = {
+                    IconButton(onClick = { /* doSomething() */ }) {
+                        Icon(
+                            imageVector = Icons.Filled.Filter,
+                            contentDescription = "Sorting Options"
+                        )
+                    }
+                }
+            )
+        }
+    ) { paddingValues ->
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues).padding(top = 8.dp)) {
+            LazyVerticalStaggeredGrid(
+                columns = StaggeredGridCells.Adaptive(200.dp),
+                verticalItemSpacing = 8.dp,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                content = {
+                    items(DataProvider.tasks.size) { index ->
+                        Card(
+                            shape = RoundedCornerShape(15.dp),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
                         ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
+                            Column(
+                                modifier = Modifier.fillMaxSize()
                             ) {
-                                Text(
-                                    text = DataProvider.tasks[index].title,
-                                    fontWeight = FontWeight.Bold,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    modifier = Modifier
-                                        .padding(4.dp)
-                                        .weight(1f),
-                                    fontSize = 16.sp,
-                                    textAlign = TextAlign.Center,
-                                )
-
                                 Box(
                                     modifier = Modifier
-                                        .fillMaxHeight()
-                                        .padding(end = 4.dp)
-                                )
-                                {
-                                    Card(
-                                        elevation = CardDefaults.cardElevation(10.dp),
-                                        colors = CardDefaults.cardColors(
-                                            containerColor = Color(0xFF6650a4)
-                                        )
+                                        .fillMaxWidth()
+                                        .background(Color(147, 176, 230))
+
+                                ) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth(),
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Image(
-                                            imageVector = Icons.Default.Circle,
-                                            contentDescription = "Priority",
-                                            colorFilter = ColorFilter.tint(Color(128, 203, 196))
+                                        Text(
+                                            text = DataProvider.tasks[index].title,
+                                            fontWeight = FontWeight.Bold,
+                                            style = MaterialTheme.typography.titleMedium,
+                                            modifier = Modifier
+                                                .padding(4.dp)
+                                                .weight(1f),
+                                            fontSize = 16.sp,
+                                            textAlign = TextAlign.Center,
                                         )
+
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxHeight()
+                                                .padding(end = 4.dp)
+                                        )
+                                        {
+                                            Card(
+                                                elevation = CardDefaults.cardElevation(10.dp),
+                                                colors = CardDefaults.cardColors(
+                                                    containerColor = Color(0xFF6650a4)
+                                                )
+                                            ) {
+                                                Image(
+                                                    imageVector = Icons.Default.Circle,
+                                                    contentDescription = "Priority",
+                                                    colorFilter = ColorFilter.tint(
+                                                        Color(
+                                                            128,
+                                                            203,
+                                                            196
+                                                        )
+                                                    )
+                                                )
+                                            }
+                                        }
                                     }
+                                }
+                                Text(
+                                    text = DataProvider.tasks[index].description,
+                                    modifier = Modifier.padding(4.dp),
+                                    fontSize = 14.sp
+                                )
+
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 8.dp, bottom = 8.dp),
+                                    Arrangement.SpaceEvenly
+                                ) {
+                                    OutlinedIconButton(
+                                        onClick = { /*TODO*/ },
+                                        enabled = true,
+                                        modifier = Modifier.size(30.dp),
+                                        border = BorderStroke(2.dp, Color(0xFF6650a4)),
+                                        colors = IconButtonDefaults.iconButtonColors(
+                                            contentColor = Color(0xFF6650a4),
+                                        ),
+                                        content = {
+                                            Icon(
+                                                imageVector = Icons.Outlined.KeyboardArrowUp,
+                                                contentDescription = "Higher priority"
+                                            )
+                                        }
+                                    )
+                                    OutlinedIconButton(
+                                        onClick = { /*TODO*/ },
+                                        enabled = true,
+                                        modifier = Modifier.size(30.dp),
+                                        colors = IconButtonDefaults.iconButtonColors(
+                                            contentColor = Color(0xFF6650a4),
+                                        ),
+                                        border = BorderStroke(2.dp, Color(0xFF6650a4)),
+                                        content = {
+                                            Icon(
+                                                imageVector = Icons.Outlined.Done,
+                                                contentDescription = " Done"
+                                            )
+                                        }
+                                    )
+                                    OutlinedIconButton(
+                                        onClick = { /*TODO*/ },
+                                        enabled = true,
+                                        modifier = Modifier.size(30.dp),
+                                        border = BorderStroke(2.dp, Color(0xFF6650a4)),
+                                        colors = IconButtonDefaults.iconButtonColors(
+                                            contentColor = Color(0xFF6650a4),
+                                        ),
+                                        content = {
+                                            Icon(
+                                                imageVector = Icons.Outlined.KeyboardArrowDown,
+                                                contentDescription = "Lower priority"
+                                            )
+                                        }
+                                    )
                                 }
                             }
                         }
-                        Text(
-                            text = DataProvider.tasks[index].description,
-                            modifier = Modifier.padding(4.dp),
-                            fontSize = 14.sp
-                        )
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 8.dp, bottom = 8.dp),
-                            Arrangement.SpaceEvenly
-                        ) {
-                            OutlinedIconButton(
-                                onClick = { /*TODO*/ },
-                                enabled = true,
-                                modifier = Modifier.size(30.dp),
-                                border = BorderStroke(2.dp, Color(0xFF6650a4)),
-                                colors = IconButtonDefaults.iconButtonColors(
-                                    contentColor = Color(0xFF6650a4),
-                                ),
-                                content = {
-                                    Icon(
-                                        imageVector = Icons.Outlined.KeyboardArrowUp,
-                                        contentDescription = "Higher priority"
-                                    )
-                                }
-                            )
-                            OutlinedIconButton(
-                                onClick = { /*TODO*/ },
-                                enabled = true,
-                                modifier = Modifier.size(30.dp),
-                                colors = IconButtonDefaults.iconButtonColors(
-                                    contentColor = Color(0xFF6650a4),
-                                ),
-                                border = BorderStroke(2.dp, Color(0xFF6650a4)),
-                                content = {
-                                    Icon(
-                                        imageVector = Icons.Outlined.Done,
-                                        contentDescription = " Done"
-                                    )
-                                }
-                            )
-                            OutlinedIconButton(
-                                onClick = { /*TODO*/ },
-                                enabled = true,
-                                modifier = Modifier.size(30.dp),
-                                border = BorderStroke(2.dp, Color(0xFF6650a4)),
-                                colors = IconButtonDefaults.iconButtonColors(
-                                    contentColor = Color(0xFF6650a4),
-                                ),
-                                content = {
-                                    Icon(
-                                        imageVector = Icons.Outlined.KeyboardArrowDown,
-                                        contentDescription = "Lower priority"
-                                    )
-                                }
-                            )
-                        }
                     }
-                }
-            }
-        },
-        modifier = Modifier.fillMaxSize()
-    )
+                },
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+    }
 }

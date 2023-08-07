@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Filter
 import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
@@ -237,7 +238,8 @@ private fun ButtonsRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 8.dp, bottom = 8.dp),
-        Arrangement.SpaceEvenly
+        Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         CreateOutlinedIconButton(
             onClick = onClickHigherPriority,
@@ -251,6 +253,21 @@ private fun ButtonsRow(
             onClick = onClickLowerPriority,
             icon = Icons.Outlined.KeyboardArrowDown
         )
+
+        FilledTonalIconButton(
+            onClick = { /* doSomething() */ },
+            colors = IconButtonDefaults.iconButtonColors(
+                containerColor = Color(250, 50, 100)
+            ),
+            shape = FloatingActionButtonDefaults.smallShape,
+            modifier = Modifier.padding(start = 4.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Delete,
+                contentDescription = "Delete",
+                tint = Color(0xAA0437F2)
+            )
+        }
     }
 }
 
@@ -262,7 +279,7 @@ private fun CreateOutlinedIconButton(
     OutlinedIconButton(
         onClick = onClick,
         enabled = true,
-        modifier = Modifier.size(30.dp),
+        modifier = Modifier.size(40.dp),
         border = BorderStroke(2.dp, Color(0xFF6650a4)),
         colors = IconButtonDefaults.iconButtonColors(
             contentColor = Color(0xFF6650a4),

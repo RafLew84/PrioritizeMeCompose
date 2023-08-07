@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Filter
 import androidx.compose.material.icons.outlined.Done
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material3.Card
@@ -55,10 +56,13 @@ import com.example.prioritizemecompose.data.dummydata.DataProvider
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun TaskListScreen() {
+fun TaskListScreen(
+    onAddScreen: () -> Unit,
+    onEditScreen: () -> Unit
+) {
     Scaffold(
         floatingActionButton = {
-            AddTaskFAB(onClick = { /* TODO */} )
+            AddTaskFAB(onClick = { onAddScreen()} )
         },
         topBar = {
             TopAppBar(
@@ -84,6 +88,7 @@ fun TaskListScreen() {
                             onClickHigherPriority = { /*TODO()*/ },
                             onClickDone = { /*TODO()*/ },
                             onClickLowerPriority = { /*TODO()*/ },
+                            onClickEdit = onEditScreen,
                             task = DataProvider.tasks[index]
                         )
                     }
@@ -150,6 +155,7 @@ private fun CreateItemCard(
     onClickHigherPriority: () -> Unit,
     onClickDone: () -> Unit,
     onClickLowerPriority: () -> Unit,
+    onClickEdit: () -> Unit,
     task: Task
 ) {
     Card(
@@ -170,6 +176,7 @@ private fun CreateItemCard(
                 onClickHigherPriority = onClickHigherPriority,
                 onClickDone = onClickDone,
                 onClickLowerPriority = onClickLowerPriority,
+                onClickEdit = onClickEdit
             )
 
         }
@@ -233,42 +240,60 @@ private fun ButtonsRow(
     onClickHigherPriority: () -> Unit,
     onClickDone: () -> Unit,
     onClickLowerPriority: () -> Unit,
+    onClickEdit: () -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp, bottom = 8.dp),
-        Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        CreateOutlinedIconButton(
-            onClick = onClickHigherPriority,
-            icon = Icons.Outlined.KeyboardArrowUp
-        )
-        CreateOutlinedIconButton(
-            onClick = onClickDone,
-            icon = Icons.Outlined.Done
-        )
-        CreateOutlinedIconButton(
-            onClick = onClickLowerPriority,
-            icon = Icons.Outlined.KeyboardArrowDown
-        )
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            CreateOutlinedIconButton(
+                onClick = onClickHigherPriority,
+                icon = Icons.Outlined.KeyboardArrowUp
+            )
+            CreateOutlinedIconButton(
+                onClick = onClickDone,
+                icon = Icons.Outlined.Done
+            )
+            CreateOutlinedIconButton(
+                onClick = onClickLowerPriority,
+                icon = Icons.Outlined.KeyboardArrowDown
+            )
 
+            OutlinedIconButton(
+                onClick = { /* doSomething() */ },
+                shape = FloatingActionButtonDefaults.smallShape,
+                modifier = Modifier.padding(start = 4.dp),
+                border = BorderStroke(2.dp, Color(0xFF6650a4)),
+                colors = IconButtonDefaults.iconButtonColors(
+                    contentColor = Color(0xFF6650a4),
+                ),
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = "Delete",
+                    tint = Color(0xAA90021F)
+                )
+            }
+        }
         OutlinedIconButton(
-            onClick = { /* doSomething() */ },
-            shape = FloatingActionButtonDefaults.smallShape,
-            modifier = Modifier.padding(start = 4.dp),
+            onClick = onClickEdit,
+            enabled = true,
+            modifier = Modifier.fillMaxWidth().padding(start = 4.dp, end = 4.dp),
             border = BorderStroke(2.dp, Color(0xFF6650a4)),
             colors = IconButtonDefaults.iconButtonColors(
                 contentColor = Color(0xFF6650a4),
             ),
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Delete,
-                contentDescription = "Delete",
-                tint = Color(0xAA90021F)
-            )
-        }
+            content = {
+                Icon(
+                    imageVector = Icons.Outlined.Edit,
+                    contentDescription = "Edit task"
+                )
+            }
+        )
     }
 }
 

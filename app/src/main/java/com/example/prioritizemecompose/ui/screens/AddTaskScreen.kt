@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTaskScreen(){
+fun AddTaskScreen(onHome: () -> Unit){
     
     val radioOptions = listOf("Low", "Normal", "High")
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[1] ) }
@@ -126,7 +126,7 @@ fun AddTaskScreen(){
 
 
             Button(
-                onClick = { /*TODO*/ },
+                onClick = onHome,
                 modifier = Modifier.fillMaxWidth(.5f)
             ) {
                 Text(
@@ -135,7 +135,7 @@ fun AddTaskScreen(){
                 )
             }
             OutlinedButton(
-                onClick = { /*TODO*/ },
+                onClick = onHome,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(

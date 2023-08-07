@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.prioritizemecompose.ui.Navigation
 import com.example.prioritizemecompose.ui.screens.AddTaskScreen
 import com.example.prioritizemecompose.ui.screens.TaskListScreen
 import com.example.prioritizemecompose.ui.screens.UpdateTaskScreen
@@ -25,7 +26,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    TaskListScreen()
+                    Navigation()
                 }
             }
         }

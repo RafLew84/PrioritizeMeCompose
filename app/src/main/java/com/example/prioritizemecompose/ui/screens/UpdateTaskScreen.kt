@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UpdateTaskScreen(){
+fun UpdateTaskScreen(onHome: () -> Unit){
     
     val radioOptions = listOf("Low", "Normal", "High")
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[1] ) }
@@ -136,7 +136,7 @@ fun UpdateTaskScreen(){
 
 
             Button(
-                onClick = { /*TODO*/ },
+                onClick = onHome,
                 modifier = Modifier.fillMaxWidth(.5f).padding(end = 2.dp)
             ) {
                 Text(
@@ -145,7 +145,7 @@ fun UpdateTaskScreen(){
                 )
             }
             Button(
-                onClick = { /*TODO*/ },
+                onClick = onHome,
                 modifier = Modifier.fillMaxWidth().padding(start = 2.dp)
             ) {
                 Text(
@@ -155,7 +155,7 @@ fun UpdateTaskScreen(){
             }
         }
         OutlinedButton(
-            onClick = { /*TODO*/ },
+            onClick = onHome,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(

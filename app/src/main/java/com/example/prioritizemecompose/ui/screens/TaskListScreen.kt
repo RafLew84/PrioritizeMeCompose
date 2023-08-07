@@ -254,18 +254,19 @@ private fun ButtonsRow(
             icon = Icons.Outlined.KeyboardArrowDown
         )
 
-        FilledTonalIconButton(
+        OutlinedIconButton(
             onClick = { /* doSomething() */ },
-            colors = IconButtonDefaults.iconButtonColors(
-                containerColor = Color(250, 50, 100)
-            ),
             shape = FloatingActionButtonDefaults.smallShape,
-            modifier = Modifier.padding(start = 4.dp)
+            modifier = Modifier.padding(start = 4.dp),
+            border = BorderStroke(2.dp, Color(0xFF6650a4)),
+            colors = IconButtonDefaults.iconButtonColors(
+                contentColor = Color(0xFF6650a4),
+            ),
         ) {
             Icon(
                 imageVector = Icons.Filled.Delete,
                 contentDescription = "Delete",
-                tint = Color(0xAA0437F2)
+                tint = Color(0xAA90021F)
             )
         }
     }

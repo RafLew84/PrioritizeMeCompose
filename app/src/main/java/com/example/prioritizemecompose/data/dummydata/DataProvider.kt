@@ -1,6 +1,6 @@
 package com.example.prioritizemecompose.data.dummydata
 
-import com.example.prioritizemecompose.data.Task
+import com.example.prioritizemecompose.data.db.Task
 
 object DataProvider {
 

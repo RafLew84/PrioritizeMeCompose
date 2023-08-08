@@ -41,10 +41,18 @@ class TaskViewModel(application: Application) : ViewModel() {
         }
     }
 
-    fun getAll(){
+    private fun getAll(){
         viewModelScope.launch {
             repository.getTasks().collect{tasks ->
                 _tasksState.value = tasks
+            }
+        }
+    }
+
+    fun filterByTitle(title: String){
+        viewModelScope.launch {
+            repository.getFilteredTasksByTitle("%$title%").collect {filteredList ->
+                _tasksState.value = filteredList
             }
         }
     }

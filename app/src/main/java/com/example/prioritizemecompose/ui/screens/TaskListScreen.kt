@@ -1,7 +1,5 @@
 package com.example.prioritizemecompose.ui.screens
 
-import android.app.Application
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -38,29 +36,29 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.prioritizemecompose.data.db.Task
 import com.example.prioritizemecompose.viewmodel.TaskViewModel
-import com.example.prioritizemecompose.viewmodel.TaskViewModelFactory
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -71,14 +69,22 @@ fun TaskListScreen(
 ) {
 
     val tasks by viewModel.tasksState.collectAsStateWithLifecycle()
+    var filteredTitle by remember {
+        mutableStateOf("")
+    }
 
     Scaffold(
         floatingActionButton = {
-            AddTaskFAB(onClick = { onAddScreen()} )
+            AddTaskFAB(onClick = { onAddScreen() })
         },
         topBar = {
             TopAppBar(
-                title = { FilteringEditText() },
+                title = {
+                    FilteringEditText(filteredTitle) { title ->
+                        filteredTitle = title
+                        viewModel.filterByTitle(filteredTitle)
+                    }
+                },
                 actions = { PrioritySorting() },
                 modifier = Modifier.height(60.dp)
             )
@@ -130,17 +136,17 @@ private fun AddTaskFAB(
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-private fun FilteringEditText() {
-    OutlinedTextField(
-        value = "",
+private fun FilteringEditText(filteredTitle: String, onValueChange: (String) -> Unit) {
+    TextField(
+        value = filteredTitle,
         singleLine = true,
-        shape = MaterialTheme.shapes.small,
         modifier = Modifier.fillMaxWidth(),
         colors = TextFieldDefaults.textFieldColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
-        onValueChange = {},
-        label = { Text(text = "Filtruj") }
+        onValueChange = onValueChange,
+        label = { Text(text = "Filtruj") },
+        textStyle = TextStyle.Default.copy(fontSize = 20.sp)
     )
 }
 
@@ -172,7 +178,7 @@ private fun CreateItemCard(
 ) {
     Card(
         shape = RoundedCornerShape(15.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -294,7 +300,9 @@ private fun ButtonsRow(
         OutlinedIconButton(
             onClick = onClickEdit,
             enabled = true,
-            modifier = Modifier.fillMaxWidth().padding(start = 4.dp, end = 4.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 4.dp, end = 4.dp),
             border = BorderStroke(2.dp, Color(0xFF6650a4)),
             colors = IconButtonDefaults.iconButtonColors(
                 contentColor = Color(0xFF6650a4),

@@ -27,5 +27,5 @@ interface TaskDao {
     suspend fun updateTask(task: Task)
 
     @Query("SELECT * FROM task_table WHERE title LIKE :title")
-    fun getFilteredTasks(title: String)
+    fun getFilteredTasks(title: String): Flow<List<Task>>
 }

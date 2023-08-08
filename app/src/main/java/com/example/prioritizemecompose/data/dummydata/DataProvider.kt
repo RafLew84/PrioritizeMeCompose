@@ -4,7 +4,7 @@ import com.example.prioritizemecompose.data.db.Task
 
 object DataProvider {
 
-    val titles = listOf(
+    private val titles = listOf(
         "Finish Report",
         "Prepare Presentation",
         "Call Client",
@@ -36,7 +36,7 @@ object DataProvider {
         "Develop App Prototypes"
     )
 
-    val descriptions = listOf(
+    private val descriptions = listOf(
         "Complete the final report for the quarterly performance.",
         "Create a PowerPoint presentation for the upcoming client meeting.",
         "Reach out to the client for a follow-up discussion.",
@@ -63,5 +63,5 @@ object DataProvider {
         "Develop interactive prototypes for the new app, incorporating user-friendly design and intuitive navigation. Test the prototypes with potential users for feedback and validation."
     )
 
-    val tasks = (0..40).map { Task(titles.random(), descriptions.random()) }
+    val tasks = (0..40).map { Task(title = titles.random(), description = descriptions.random()) }
 }

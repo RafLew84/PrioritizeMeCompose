@@ -1,5 +1,7 @@
 package com.example.prioritizemecompose.ui.screens
 
+import android.app.Application
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -42,24 +44,34 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.prioritizemecompose.data.db.Task
-import com.example.prioritizemecompose.data.dummydata.DataProvider
+import com.example.prioritizemecompose.viewmodel.TaskViewModel
+import com.example.prioritizemecompose.viewmodel.TaskViewModelFactory
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListScreen(
     onAddScreen: () -> Unit,
-    onEditScreen: () -> Unit
+    onEditScreen: () -> Unit,
+    viewModel: TaskViewModel
 ) {
+
+    val tasks by viewModel.tasksState.collectAsStateWithLifecycle()
+
     Scaffold(
         floatingActionButton = {
             AddTaskFAB(onClick = { onAddScreen()} )
@@ -83,13 +95,13 @@ fun TaskListScreen(
                 verticalItemSpacing = 8.dp,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 content = {
-                    items(DataProvider.tasks.size) { index ->
+                    items(tasks.size) { index ->
                         CreateItemCard(
                             onClickHigherPriority = { /*TODO()*/ },
                             onClickDone = { /*TODO()*/ },
                             onClickLowerPriority = { /*TODO()*/ },
                             onClickEdit = onEditScreen,
-                            task = DataProvider.tasks[index]
+                            task = tasks[index]
                         )
                     }
                 },

@@ -15,4 +15,5 @@ class TaskRepository(private val application: Application) {
     suspend fun insertAllTasks(tasks: List<Task>) = dao.insertAllTasks(tasks)
     suspend fun deleteTask(task: Task) = dao.deleteTask(task)
     suspend fun updateTask(task: Task) = dao.updateTask(task)
+    suspend fun deleteAll() = dao.deleteAll()
 }

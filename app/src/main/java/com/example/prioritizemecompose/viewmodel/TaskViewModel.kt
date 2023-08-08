@@ -20,12 +20,24 @@ class TaskViewModel(application: Application) : ViewModel() {
         get() = _tasksState
 
     init {
+        reinitializeDatabaseWithDummyData()
         getAll()
     }
 
-    fun addAll(tasks: List<Task>){
+    private fun reinitializeDatabaseWithDummyData(){
+        deleteAll()
+        addAll(DataProvider.tasks)
+    }
+
+    private fun addAll(tasks: List<Task>){
         viewModelScope.launch {
             repository.insertAllTasks(tasks)
+        }
+    }
+
+    private fun deleteAll(){
+        viewModelScope.launch {
+            repository.deleteAll()
         }
     }
 
@@ -36,4 +48,6 @@ class TaskViewModel(application: Application) : ViewModel() {
             }
         }
     }
+
+
 }

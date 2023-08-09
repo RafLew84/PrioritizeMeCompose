@@ -28,6 +28,8 @@ import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FloatingActionButton
@@ -42,6 +44,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,6 +60,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.prioritizemecompose.data.db.Priority
 import com.example.prioritizemecompose.data.db.Task
 import com.example.prioritizemecompose.viewmodel.TaskViewModel
 
@@ -73,6 +77,8 @@ fun TaskListScreen(
         mutableStateOf("")
     }
 
+    val selected = remember { mutableStateOf(Priority.NORMALNY) }
+
     Scaffold(
         floatingActionButton = {
             AddTaskFAB(onClick = { onAddScreen() })
@@ -85,7 +91,7 @@ fun TaskListScreen(
                         viewModel.filterByTitle(filteredTitle)
                     }
                 },
-                actions = { PrioritySorting() },
+                actions = { PriorityFiltering(selected, viewModel)},
                 modifier = Modifier.height(60.dp)
             )
         }
@@ -151,9 +157,14 @@ private fun FilteringEditText(filteredTitle: String, onValueChange: (String) -> 
 }
 
 @Composable
-private fun PrioritySorting() {
+private fun PriorityFiltering(
+    selected: MutableState<Priority>,
+    viewModel: TaskViewModel
+) {
+    val expanded = remember { mutableStateOf(false) }
+
     FilledTonalIconButton(
-        onClick = { /* doSomething() */ },
+        onClick = { expanded.value = true },
         colors = IconButtonDefaults.iconButtonColors(
             containerColor = Color(100, 149, 237)
         ),
@@ -165,6 +176,23 @@ private fun PrioritySorting() {
             contentDescription = "Sorting Options",
             tint = Color.Black
         )
+    }
+
+    DropdownMenu(
+        expanded = expanded.value,
+        onDismissRequest = { expanded.value = false },
+    ) {
+        viewModel.priorities.forEach { option ->
+            DropdownMenuItem(
+                text = { Text(option.toString())
+                },
+                onClick = {
+                    expanded.value = false
+                    selected.value = option
+                    viewModel.filteredByPriority(option.toString())
+                }
+            )
+        }
     }
 }
 

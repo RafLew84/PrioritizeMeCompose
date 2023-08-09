@@ -9,5 +9,5 @@ data class Task(
     val title: String,
     val description: String,
     val isDone: Boolean = false,
-    val priority: Priority = Priority.MEDIUM
+    val priority: Priority = Priority.NORMALNY
 )

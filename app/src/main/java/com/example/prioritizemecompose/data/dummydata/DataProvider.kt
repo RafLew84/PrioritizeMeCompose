@@ -1,5 +1,6 @@
 package com.example.prioritizemecompose.data.dummydata
 
+import com.example.prioritizemecompose.data.db.Priority
 import com.example.prioritizemecompose.data.db.Task
 
 object DataProvider {
@@ -63,5 +64,9 @@ object DataProvider {
         "Develop interactive prototypes for the new app, incorporating user-friendly design and intuitive navigation. Test the prototypes with potential users for feedback and validation."
     )
 
-    val tasks = (0..40).map { Task(title = titles.random(), description = descriptions.random()) }
+    val tasks = (0..40).map { Task(
+        title = titles.random(),
+        description = descriptions.random(),
+        priority = Priority.values().random()
+    ) }
 }

@@ -3,6 +3,7 @@ package com.example.prioritizemecompose.viewmodel
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.prioritizemecompose.data.db.Priority
 import com.example.prioritizemecompose.data.db.Task
 import com.example.prioritizemecompose.data.dummydata.DataProvider
 import com.example.prioritizemecompose.data.rpeository.TaskRepository
@@ -18,6 +19,8 @@ class TaskViewModel(application: Application) : ViewModel() {
     private val _tasksState = MutableStateFlow<List<Task>>(emptyList())
     val tasksState: StateFlow<List<Task>>
         get() = _tasksState
+
+    val priorities = Priority.values().toList()
 
     init {
         reinitializeDatabaseWithDummyData()
@@ -57,5 +60,11 @@ class TaskViewModel(application: Application) : ViewModel() {
         }
     }
 
-
+    fun filteredByPriority(priority: String){
+        viewModelScope.launch {
+            repository.getFilteredTasksByPriority(priority).collect { filteredList ->
+                _tasksState.value = filteredList
+            }
+        }
+    }
 }

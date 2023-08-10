@@ -1,6 +1,7 @@
 package com.example.prioritizemecompose.viewmodel
 
 import android.app.Application
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.prioritizemecompose.data.db.Priority
@@ -44,7 +45,7 @@ class TaskViewModel(application: Application) : ViewModel() {
         }
     }
 
-    private fun getAll(){
+    fun getAll(){
         viewModelScope.launch {
             repository.getTasks().collect{tasks ->
                 _tasksState.value = tasks
@@ -65,6 +66,15 @@ class TaskViewModel(application: Application) : ViewModel() {
             repository.getFilteredTasksByPriority(priority).collect { filteredList ->
                 _tasksState.value = filteredList
             }
+        }
+    }
+
+    fun getTaskColor(task: Task): Color{
+        return when(task.priority) {
+            Priority.WYSOKI -> Color.Red
+            Priority.NISKI -> Color.Blue
+            Priority.NORMALNY -> Color.Green
+            else -> Color(128, 203, 196)
         }
     }
 }

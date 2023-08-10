@@ -113,7 +113,8 @@ fun TaskListScreen(
                             onClickDone = { /*TODO()*/ },
                             onClickLowerPriority = { /*TODO()*/ },
                             onClickEdit = onEditScreen,
-                            task = tasks[index]
+                            task = tasks[index],
+                            viewModel = viewModel
                         )
                     }
                 },
@@ -193,6 +194,14 @@ private fun PriorityFiltering(
                 }
             )
         }
+        DropdownMenuItem(
+            text = { Text("WYCZYŚĆ")
+            },
+            onClick = {
+                expanded.value = false
+                viewModel.getAll()
+            }
+        )
     }
 }
 
@@ -202,7 +211,8 @@ private fun CreateItemCard(
     onClickDone: () -> Unit,
     onClickLowerPriority: () -> Unit,
     onClickEdit: () -> Unit,
-    task: Task
+    task: Task,
+    viewModel: TaskViewModel
 ) {
     Card(
         shape = RoundedCornerShape(15.dp),
@@ -211,7 +221,7 @@ private fun CreateItemCard(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            CardTitle(task.title)
+            CardTitle(task, viewModel)
             Text(
                 text = task.description,
                 modifier = Modifier.padding(4.dp),
@@ -230,7 +240,7 @@ private fun CreateItemCard(
 }
 
 @Composable
-private fun CardTitle(title: String) {
+private fun CardTitle(task: Task, viewModel: TaskViewModel) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -243,7 +253,7 @@ private fun CardTitle(title: String) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = title,
+                text = task.title,
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
@@ -253,7 +263,7 @@ private fun CardTitle(title: String) {
                 textAlign = TextAlign.Center,
             )
 
-            CreatePriorityIcon(Color(128, 203, 196))
+            CreatePriorityIcon(viewModel.getTaskColor(task))
         }
     }
 }

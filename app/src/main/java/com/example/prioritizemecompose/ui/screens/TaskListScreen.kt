@@ -28,6 +28,7 @@ import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -77,8 +78,6 @@ fun TaskListScreen(
         mutableStateOf("")
     }
 
-    val selected = remember { mutableStateOf(Priority.NORMALNY) }
-
     Scaffold(
         floatingActionButton = {
             AddTaskFAB(onClick = { onAddScreen() })
@@ -91,7 +90,7 @@ fun TaskListScreen(
                         viewModel.filterByTitle(filteredTitle)
                     }
                 },
-                actions = { PriorityFiltering(selected, viewModel)},
+                actions = { PriorityFiltering(viewModel)},
                 modifier = Modifier.height(60.dp)
             )
         }
@@ -156,7 +155,6 @@ private fun FilteringEditText(filteredTitle: String, onValueChange: (String) -> 
 
 @Composable
 private fun PriorityFiltering(
-    selected: MutableState<Priority>,
     viewModel: TaskViewModel
 ) {
     val expanded = remember { mutableStateOf(false) }
@@ -186,7 +184,6 @@ private fun PriorityFiltering(
                 },
                 onClick = {
                     expanded.value = false
-                    selected.value = option
                     viewModel.filteredByPriority(option.toString())
                 }
             )

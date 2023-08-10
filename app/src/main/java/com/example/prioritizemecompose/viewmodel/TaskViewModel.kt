@@ -69,6 +69,18 @@ class TaskViewModel(application: Application) : ViewModel() {
         }
     }
 
+    fun updateTask(task: Task){
+        viewModelScope.launch {
+            repository.updateTask(task)
+        }
+    }
+
+    fun deleteTask(task: Task){
+        viewModelScope.launch{
+            repository.deleteTask(task)
+        }
+    }
+
     fun getTaskColor(task: Task): Color{
         return when(task.priority) {
             Priority.WYSOKI -> Color.Red
@@ -76,5 +88,38 @@ class TaskViewModel(application: Application) : ViewModel() {
             Priority.NORMALNY -> Color.Green
             else -> Color(128, 203, 196)
         }
+    }
+
+    fun increasePriority(task: Task) {
+        val nextPriority = when (task.priority) {
+            Priority.WYSOKI -> Priority.WYSOKI
+            Priority.NORMALNY -> Priority.WYSOKI
+            Priority.NISKI -> Priority.NORMALNY
+            Priority.WYKONANY -> Priority.WYKONANY
+        }
+
+        updateTask(task.copy(priority = nextPriority))
+    }
+
+    fun decreasePriority(task: Task) {
+        val nextPriority = when (task.priority) {
+            Priority.WYSOKI -> Priority.NORMALNY
+            Priority.NORMALNY -> Priority.NISKI
+            Priority.NISKI -> Priority.NISKI
+            Priority.WYKONANY -> Priority.WYKONANY
+        }
+
+        updateTask(task.copy(priority = nextPriority))
+    }
+
+    fun donePriority(task: Task) {
+        val nextPriority = when (task.priority) {
+            Priority.WYSOKI -> Priority.WYKONANY
+            Priority.NORMALNY -> Priority.WYKONANY
+            Priority.NISKI -> Priority.WYKONANY
+            Priority.WYKONANY -> Priority.WYKONANY
+        }
+
+        updateTask(task.copy(priority = nextPriority))
     }
 }

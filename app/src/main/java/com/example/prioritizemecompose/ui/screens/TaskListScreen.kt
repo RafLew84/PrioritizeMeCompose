@@ -109,9 +109,6 @@ fun TaskListScreen(
                 content = {
                     items(tasks.size) { index ->
                         CreateItemCard(
-                            onClickHigherPriority = { /*TODO()*/ },
-                            onClickDone = { /*TODO()*/ },
-                            onClickLowerPriority = { /*TODO()*/ },
                             onClickEdit = onEditScreen,
                             task = tasks[index],
                             viewModel = viewModel
@@ -207,9 +204,6 @@ private fun PriorityFiltering(
 
 @Composable
 private fun CreateItemCard(
-    onClickHigherPriority: () -> Unit,
-    onClickDone: () -> Unit,
-    onClickLowerPriority: () -> Unit,
     onClickEdit: () -> Unit,
     task: Task,
     viewModel: TaskViewModel
@@ -227,14 +221,13 @@ private fun CreateItemCard(
                 modifier = Modifier.padding(4.dp),
                 fontSize = 14.sp
             )
-
             ButtonsRow(
-                onClickHigherPriority = onClickHigherPriority,
-                onClickDone = onClickDone,
-                onClickLowerPriority = onClickLowerPriority,
-                onClickEdit = onClickEdit
+                onClickHigherPriority = { viewModel.increasePriority(task) },
+                onClickDone = { viewModel.donePriority(task) },
+                onClickLowerPriority = { viewModel.decreasePriority(task) },
+                onClickEdit = onClickEdit,
+                onDelete = { viewModel.deleteTask(task) }
             )
-
         }
     }
 }
@@ -296,7 +289,8 @@ private fun ButtonsRow(
     onClickHigherPriority: () -> Unit,
     onClickDone: () -> Unit,
     onClickLowerPriority: () -> Unit,
-    onClickEdit: () -> Unit
+    onClickEdit: () -> Unit,
+    onDelete: () -> Unit
 ) {
     Column {
         Row(
@@ -320,7 +314,7 @@ private fun ButtonsRow(
             )
 
             OutlinedIconButton(
-                onClick = { /* doSomething() */ },
+                onClick = onDelete,
                 shape = FloatingActionButtonDefaults.smallShape,
                 modifier = Modifier.padding(start = 4.dp),
                 border = BorderStroke(2.dp, Color(0xFF6650a4)),

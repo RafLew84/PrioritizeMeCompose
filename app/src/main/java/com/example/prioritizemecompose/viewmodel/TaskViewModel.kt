@@ -1,7 +1,6 @@
 package com.example.prioritizemecompose.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,13 +8,8 @@ import com.example.prioritizemecompose.data.db.Priority
 import com.example.prioritizemecompose.data.db.Task
 import com.example.prioritizemecompose.data.dummydata.DataProvider
 import com.example.prioritizemecompose.data.rpeository.TaskRepository
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -23,13 +17,14 @@ class TaskViewModel(application: Application) : ViewModel() {
 
     private val repository = TaskRepository(application)
 
-    private val _tasksState = MutableStateFlow<List<Task>>(emptyList())
-    val tasksState: StateFlow<List<Task>>
-        get() = _tasksState
+    val tasksState: StateFlow<List<Task>> = repository.getTasks().stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(),
+        emptyList()
+    )
 
     init {
         reinitializeDatabaseWithDummyData()
-        getAll()
     }
 
     private fun reinitializeDatabaseWithDummyData(){
@@ -46,14 +41,6 @@ class TaskViewModel(application: Application) : ViewModel() {
     private fun deleteAll(){
         viewModelScope.launch {
             repository.deleteAll()
-        }
-    }
-
-    private fun getAll(){
-        viewModelScope.launch {
-            repository.getTasks().collect{tasks ->
-                _tasksState.value = tasks
-            }
         }
     }
 

@@ -27,8 +27,6 @@ class TaskViewModel(application: Application) : ViewModel() {
     val tasksState: StateFlow<List<Task>>
         get() = _tasksState
 
-    val priorities = listOf("Rosnąco", "Malejąco")
-
     init {
         reinitializeDatabaseWithDummyData()
         getAll()
@@ -110,6 +108,6 @@ class TaskViewModel(application: Application) : ViewModel() {
             Priority.WYKONANY -> Priority.WYKONANY
         }
 
-        updateTask(task.copy(priority = nextPriority))
+        updateTask(task.copy(priority = nextPriority, isDone = true))
     }
 }

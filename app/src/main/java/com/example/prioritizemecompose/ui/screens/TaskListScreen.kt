@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -28,7 +27,6 @@ import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -58,6 +56,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -78,20 +77,25 @@ fun TaskListScreen(
         mutableStateOf("")
     }
 
+    val selected = remember { mutableStateOf(Priority.NORMALNY.name) }
+
     Scaffold(
         floatingActionButton = {
             AddTaskFAB(onClick = { onAddScreen() })
         },
         topBar = {
             TopAppBar(
-                title = {
-                    FilteringEditText(filteredTitle) { title ->
-                        filteredTitle = title
-                        viewModel.filterByTitle(filteredTitle)
-                    }
-                },
-                actions = { PriorityFiltering(viewModel)},
-                modifier = Modifier.height(60.dp)
+                title = { Text(
+                    text = "PrioritizeMe",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    textDecoration = TextDecoration.Underline,
+                    style = MaterialTheme.typography.titleLarge,
+                ) },
+                actions = { PriorityFiltering(selected, viewModel)},
+                modifier = Modifier.fillMaxWidth()
             )
         }
     ) { paddingValues ->
@@ -106,7 +110,10 @@ fun TaskListScreen(
                 verticalItemSpacing = 8.dp,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 content = {
-                    items(tasks.size) { index ->
+                    items(
+                        count = tasks.size,
+                        key = { tasks[it].id }
+                    ) { index ->
                         CreateItemCard(
                             onClickEdit = onEditScreen,
                             task = tasks[index],
@@ -138,23 +145,8 @@ private fun AddTaskFAB(
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
-private fun FilteringEditText(filteredTitle: String, onValueChange: (String) -> Unit) {
-    TextField(
-        value = filteredTitle,
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth(),
-        colors = TextFieldDefaults.textFieldColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        onValueChange = onValueChange,
-        label = { Text(text = "Filtruj") },
-        textStyle = TextStyle.Default.copy(fontSize = 20.sp)
-    )
-}
-
-@Composable
 private fun PriorityFiltering(
+    selected: MutableState<String>,
     viewModel: TaskViewModel
 ) {
     val expanded = remember { mutableStateOf(false) }
@@ -180,22 +172,14 @@ private fun PriorityFiltering(
     ) {
         viewModel.priorities.forEach { option ->
             DropdownMenuItem(
-                text = { Text(option.toString())
+                text = { Text(option)
                 },
                 onClick = {
                     expanded.value = false
-                    viewModel.filteredByPriority(option.toString())
+                    selected.value = option
                 }
             )
         }
-        DropdownMenuItem(
-            text = { Text("WYCZYŚĆ")
-            },
-            onClick = {
-                expanded.value = false
-                viewModel.getAll()
-            }
-        )
     }
 }
 

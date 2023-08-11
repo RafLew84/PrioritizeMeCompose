@@ -9,9 +9,6 @@ class TaskRepository(private val application: Application) {
     private val dao = db.taskDao()
 
     fun getTasks() = dao.getTasks()
-    fun getFilteredTasksByTitle(title: String) = dao.getFilteredTasksByTitle(title)
-    fun getFilteredTasksByPriority(priority: String) = dao.getFilteredTasksByPriority(priority)
-
     suspend fun insertTask(task: Task) = dao.insertTask(task)
     suspend fun insertAllTasks(tasks: List<Task>) = dao.insertAllTasks(tasks)
     suspend fun deleteTask(task: Task) = dao.deleteTask(task)

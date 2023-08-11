@@ -26,12 +26,6 @@ interface TaskDao {
     @Update
     suspend fun updateTask(task: Task)
 
-    @Query("SELECT * FROM task_table WHERE title LIKE :title")
-    fun getFilteredTasksByTitle(title: String): Flow<List<Task>>
-
     @Query("DELETE FROM task_table")
     suspend fun deleteAll()
-
-    @Query("SELECT * FROM task_table WHERE priority = :priority")
-    fun getFilteredTasksByPriority(priority: String): Flow<List<Task>>
 }

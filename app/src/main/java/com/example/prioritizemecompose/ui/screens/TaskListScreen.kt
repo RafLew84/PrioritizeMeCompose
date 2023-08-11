@@ -20,17 +20,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Filter
 import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -39,28 +35,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.prioritizemecompose.data.db.Priority
 import com.example.prioritizemecompose.data.db.Task
 import com.example.prioritizemecompose.viewmodel.TaskViewModel
 
@@ -73,31 +59,11 @@ fun TaskListScreen(
 ) {
 
     val tasks by viewModel.tasksState.collectAsStateWithLifecycle()
-    var filteredTitle by remember {
-        mutableStateOf("")
-    }
-
-    val selected = remember { mutableStateOf(Priority.NORMALNY.name) }
 
     Scaffold(
         floatingActionButton = {
             AddTaskFAB(onClick = { onAddScreen() })
         },
-        topBar = {
-            TopAppBar(
-                title = { Text(
-                    text = "PrioritizeMe",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    textDecoration = TextDecoration.Underline,
-                    style = MaterialTheme.typography.titleLarge,
-                ) },
-                actions = { PriorityFiltering(selected, viewModel)},
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -110,10 +76,7 @@ fun TaskListScreen(
                 verticalItemSpacing = 8.dp,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 content = {
-                    items(
-                        count = tasks.size,
-                        key = { tasks[it].id }
-                    ) { index ->
+                    items(count = tasks.size) { index ->
                         CreateItemCard(
                             onClickEdit = onEditScreen,
                             task = tasks[index],
@@ -145,45 +108,6 @@ private fun AddTaskFAB(
 }
 
 @Composable
-private fun PriorityFiltering(
-    selected: MutableState<String>,
-    viewModel: TaskViewModel
-) {
-    val expanded = remember { mutableStateOf(false) }
-
-    FilledTonalIconButton(
-        onClick = { expanded.value = true },
-        colors = IconButtonDefaults.iconButtonColors(
-            containerColor = Color(100, 149, 237)
-        ),
-        shape = FloatingActionButtonDefaults.smallShape,
-        modifier = Modifier.padding(top = 10.dp, start = 4.dp)
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Filter,
-            contentDescription = "Sorting Options",
-            tint = Color.Black
-        )
-    }
-
-    DropdownMenu(
-        expanded = expanded.value,
-        onDismissRequest = { expanded.value = false },
-    ) {
-        viewModel.priorities.forEach { option ->
-            DropdownMenuItem(
-                text = { Text(option)
-                },
-                onClick = {
-                    expanded.value = false
-                    selected.value = option
-                }
-            )
-        }
-    }
-}
-
-@Composable
 private fun CreateItemCard(
     onClickEdit: () -> Unit,
     task: Task,
@@ -192,6 +116,7 @@ private fun CreateItemCard(
     Card(
         shape = RoundedCornerShape(15.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+        border = BorderStroke(2.dp, Color.Blue)
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
@@ -199,7 +124,7 @@ private fun CreateItemCard(
             CardTitle(task, viewModel)
             Text(
                 text = task.description,
-                modifier = Modifier.padding(4.dp),
+                modifier = Modifier.padding(6.dp),
                 fontSize = 14.sp
             )
             ButtonsRow(

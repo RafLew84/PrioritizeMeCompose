@@ -24,7 +24,7 @@ class TaskViewModel(application: Application) : ViewModel() {
     )
 
     init {
-        reinitializeDatabaseWithDummyData()
+        //reinitializeDatabaseWithDummyData()
     }
 
     private fun reinitializeDatabaseWithDummyData(){
@@ -47,6 +47,12 @@ class TaskViewModel(application: Application) : ViewModel() {
     fun updateTask(task: Task){
         viewModelScope.launch {
             repository.updateTask(task)
+        }
+    }
+
+    fun addTask(task: Task){
+        viewModelScope.launch {
+            repository.insertTask(task)
         }
     }
 

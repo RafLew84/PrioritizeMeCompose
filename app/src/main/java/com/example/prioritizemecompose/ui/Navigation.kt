@@ -33,7 +33,10 @@ fun Navigation() {
         }
 
         composable(route = Screens.Add.route){
-            AddTaskScreen { navController.popBackStack() }
+            AddTaskScreen(
+                onHome = { navController.popBackStack() },
+                viewModel = viewModel
+            )
         }
 
         composable(route = Screens.Update.route){

@@ -44,12 +44,13 @@ fun UpdateTaskScreen(id: String, viewModel: TaskViewModel, onHome: () -> Unit){
 
     val radioOptions = Priority.values().toList()
     val checkedState = remember { mutableStateOf(true) }
-    val enabled = remember { mutableStateOf(true) }
+
 
     var task by remember {
         mutableStateOf(viewModel.getTask(id.toInt()))
     }
     val (selectedOption, onOptionSelected) = remember { mutableStateOf( task.priority) }
+    val enabled = remember { mutableStateOf(!task.isDone) }
     
     Column(modifier = Modifier
         .fillMaxSize()

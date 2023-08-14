@@ -26,8 +26,6 @@ fun Navigation() {
     NavHost(navController = navController, startDestination = Screens.TaskList.route) {
         composable(route = Screens.TaskList.route){
             TaskListScreen (
-//                onAddScreen = {navController.navigate(Screens.Add.route) },
-//                onEditScreen = { navController.navigate(Screens.Update.route + "/$id") },
                 navController = navController,
                 viewModel = viewModel
             )

@@ -56,8 +56,6 @@ import com.example.prioritizemecompose.viewmodel.TaskViewModel
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListScreen(
-//    onAddScreen: () -> Unit,
-//    onEditScreen: () -> Unit,
     navController: NavHostController,
     viewModel: TaskViewModel
 ) {

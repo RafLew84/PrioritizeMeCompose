@@ -105,12 +105,7 @@ fun AddTaskScreen(onHome: () -> Unit, viewModel: TaskViewModel){
                                 value = text.toString(),
                                 onValueChange = {},
                                 modifier = Modifier
-                                    .padding(start = 16.dp)
-                                    .selectable(
-                                        selected = (text == selectedOption),
-                                        onClick = { onOptionSelected(text) },
-                                        enabled = enabled.value
-                                    ),
+                                    .padding(start = 16.dp),
                                 enabled = enabled.value,
                                 singleLine = true,
                                 readOnly = true,
@@ -168,15 +163,13 @@ fun AddTaskScreen(onHome: () -> Unit, viewModel: TaskViewModel){
                 .fillMaxWidth()
                 .padding(top = 8.dp)
         ) {
-
-
             Button(
                 onClick = {
                     task = task.copy(priority = selectedOption)
                     if (task.title.isNotEmpty() && task.description.isNotEmpty())
                         viewModel.addTask(task)
                     onHome()
-                          },
+                },
                 modifier = Modifier.fillMaxWidth(.5f)
             ) {
                 Text(

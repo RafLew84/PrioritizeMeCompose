@@ -68,7 +68,7 @@ fun UpdateTaskScreen(id: String, viewModel: TaskViewModel, onHome: () -> Unit){
             onValueChange = {task = task.copy(description = it)},
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(.5f),
+                .fillMaxHeight(.4f),
             singleLine = false,
             label = { Text(text = "Opis")}
         )
@@ -93,12 +93,10 @@ fun UpdateTaskScreen(id: String, viewModel: TaskViewModel, onHome: () -> Unit){
                                 .fillMaxWidth()
                                 .selectable(
                                     selected = (text == selectedOption),
-                                    onClick = {
-                                        onOptionSelected(text)
-                                    },
+                                    onClick = { onOptionSelected(text) },
                                     enabled = enabled.value
                                 )
-                                .padding(horizontal = 16.dp),
+                                .padding(horizontal = 4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             RadioButton(
@@ -108,8 +106,8 @@ fun UpdateTaskScreen(id: String, viewModel: TaskViewModel, onHome: () -> Unit){
                             )
                             TextField(
                                 value = text.toString(),
-                                onValueChange = {task = task.copy(priority = Priority.valueOf(selectedOption.name))},
-                                modifier = Modifier.padding(start = 16.dp),
+                                onValueChange = {},
+                                modifier = Modifier.padding(start = 2.dp),
                                 enabled = enabled.value,
                                 singleLine = true,
                                 readOnly = true,
@@ -171,6 +169,7 @@ fun UpdateTaskScreen(id: String, viewModel: TaskViewModel, onHome: () -> Unit){
 
             Button(
                 onClick = {
+                    task = task.copy(priority = Priority.valueOf(selectedOption.name))
                     viewModel.updateTask(task)
                     onHome()
                           },

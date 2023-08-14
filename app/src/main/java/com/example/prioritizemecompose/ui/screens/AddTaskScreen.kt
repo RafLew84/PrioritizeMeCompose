@@ -40,7 +40,7 @@ import com.example.prioritizemecompose.viewmodel.TaskViewModel
 fun AddTaskScreen(onHome: () -> Unit, viewModel: TaskViewModel){
 
     val radioOptions = Priority.values().toList()
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[1] ) }
+    val (selectedOption, onOptionSelected) = remember { mutableStateOf( radioOptions[1]) }
     val checkedState = remember { mutableStateOf(true) }
     val enabled = remember { mutableStateOf(true) }
 
@@ -90,9 +90,7 @@ fun AddTaskScreen(onHome: () -> Unit, viewModel: TaskViewModel){
                                 .fillMaxWidth()
                                 .selectable(
                                     selected = (text == selectedOption),
-                                    onClick = {
-                                        onOptionSelected(text)
-                                    },
+                                    onClick = { onOptionSelected(text) },
                                     enabled = enabled.value
                                 )
                                 .padding(horizontal = 16.dp),
@@ -105,8 +103,14 @@ fun AddTaskScreen(onHome: () -> Unit, viewModel: TaskViewModel){
                             )
                             TextField(
                                 value = text.toString(),
-                                onValueChange = {task = task.copy(priority = selectedOption)},
-                                modifier = Modifier.padding(start = 16.dp),
+                                onValueChange = {},
+                                modifier = Modifier
+                                    .padding(start = 16.dp)
+                                    .selectable(
+                                        selected = (text == selectedOption),
+                                        onClick = { onOptionSelected(text) },
+                                        enabled = enabled.value
+                                    ),
                                 enabled = enabled.value,
                                 singleLine = true,
                                 readOnly = true,
@@ -168,6 +172,7 @@ fun AddTaskScreen(onHome: () -> Unit, viewModel: TaskViewModel){
 
             Button(
                 onClick = {
+                    task = task.copy(priority = selectedOption)
                     if (task.title.isNotEmpty() && task.description.isNotEmpty())
                         viewModel.addTask(task)
                     onHome()

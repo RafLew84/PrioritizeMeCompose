@@ -20,38 +20,52 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.prioritizemecompose.data.db.Priority
+import com.example.prioritizemecompose.data.db.Task
+import com.example.prioritizemecompose.viewmodel.TaskViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UpdateTaskScreen(onHome: () -> Unit){
-    
-    val radioOptions = listOf("Low", "Normal", "High")
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[1] ) }
+fun UpdateTaskScreen(id: String, viewModel: TaskViewModel, onHome: () -> Unit){
+
+    val radioOptions = Priority.values().toList()
     val checkedState = remember { mutableStateOf(true) }
+    val enabled = remember { mutableStateOf(true) }
+
+    var task by remember {
+        mutableStateOf(viewModel.getTask(id.toInt()))
+    }
+    val (selectedOption, onOptionSelected) = remember { mutableStateOf( task.priority) }
     
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(8.dp)
     ) {
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = task.title,
+            onValueChange = {task = task.copy(title = it)},
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             label = { Text(text = "Tytuł")}
         )
 
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = task.description,
+            onValueChange = {task = task.copy(description = it)},
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(.5f),
@@ -66,7 +80,7 @@ fun UpdateTaskScreen(onHome: () -> Unit){
         ) {
             OutlinedCard(
                 modifier = Modifier
-                    .fillMaxWidth(.5f)
+                    .fillMaxWidth(.6f)
                     .padding(end = 2.dp),
             ) {
                 Column(
@@ -81,20 +95,31 @@ fun UpdateTaskScreen(onHome: () -> Unit){
                                     selected = (text == selectedOption),
                                     onClick = {
                                         onOptionSelected(text)
-                                    }
+                                    },
+                                    enabled = enabled.value
                                 )
                                 .padding(horizontal = 16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             RadioButton(
                                 selected = (text == selectedOption),
-                                onClick = { onOptionSelected(text) }
+                                onClick = { onOptionSelected(text) },
+                                enabled = enabled.value
                             )
-                            Text(
-                                text = text,
-                                style = MaterialTheme.typography.bodyMedium.merge(),
+                            TextField(
+                                value = text.toString(),
+                                onValueChange = {task = task.copy(priority = Priority.valueOf(selectedOption.name))},
                                 modifier = Modifier.padding(start = 16.dp),
-                                fontSize = 24.sp
+                                enabled = enabled.value,
+                                singleLine = true,
+                                readOnly = true,
+                                textStyle = TextStyle.Default.copy(fontSize = 16.sp),
+                                colors = TextFieldDefaults.textFieldColors(
+                                    focusedIndicatorColor = Color.Transparent,
+                                    unfocusedIndicatorColor = Color.Transparent,
+                                    disabledIndicatorColor = Color.Transparent,
+                                    containerColor = Color.White
+                                )
                             )
                         }
                     }
@@ -114,16 +139,25 @@ fun UpdateTaskScreen(onHome: () -> Unit){
                 ) {
                     Text(
                         text = "Czy zakończone",
-                        fontSize = 24.sp,
+                        fontSize = 16.sp,
                         modifier = Modifier.padding(start = 4.dp)
                     )
 
                     Checkbox(
                         modifier = Modifier
-                            .scale(1.5f)
+                            .scale(1.2f)
                             .padding(top = 8.dp),
-                        checked = checkedState.value,
-                        onCheckedChange = { checkedState.value = it }
+                        checked = task.isDone,
+                        onCheckedChange = {
+                            checkedState.value = it
+                            task = task.copy(isDone = it)
+                            if (checkedState.value) {
+                                enabled.value = false
+                                onOptionSelected(Priority.WYKONANY)
+                            }
+                            else
+                                enabled.value = true
+                        }
                     )
                 }
             }
@@ -136,7 +170,10 @@ fun UpdateTaskScreen(onHome: () -> Unit){
 
 
             Button(
-                onClick = onHome,
+                onClick = {
+                    viewModel.updateTask(task)
+                    onHome()
+                          },
                 modifier = Modifier.fillMaxWidth(.5f).padding(end = 2.dp)
             ) {
                 Text(
@@ -145,7 +182,10 @@ fun UpdateTaskScreen(onHome: () -> Unit){
                 )
             }
             Button(
-                onClick = onHome,
+                onClick = {
+                    viewModel.deleteTask(task)
+                    onHome()
+                          },
                 modifier = Modifier.fillMaxWidth().padding(start = 2.dp)
             ) {
                 Text(

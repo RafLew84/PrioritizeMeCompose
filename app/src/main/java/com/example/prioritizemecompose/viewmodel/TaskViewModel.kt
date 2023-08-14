@@ -24,7 +24,7 @@ class TaskViewModel(application: Application) : ViewModel() {
     )
 
     init {
-        //reinitializeDatabaseWithDummyData()
+        reinitializeDatabaseWithDummyData()
     }
 
     private fun reinitializeDatabaseWithDummyData(){
@@ -49,6 +49,9 @@ class TaskViewModel(application: Application) : ViewModel() {
             repository.updateTask(task)
         }
     }
+
+    fun getTask(id: Int) =
+        tasksState.value.find { it.id == id } ?: Task(title = "", description = "")
 
     fun addTask(task: Task){
         viewModelScope.launch {

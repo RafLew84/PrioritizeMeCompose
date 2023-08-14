@@ -47,14 +47,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.prioritizemecompose.data.db.Task
+import com.example.prioritizemecompose.ui.Screens
 import com.example.prioritizemecompose.viewmodel.TaskViewModel
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TaskListScreen(
-    onAddScreen: () -> Unit,
-    onEditScreen: () -> Unit,
+//    onAddScreen: () -> Unit,
+//    onEditScreen: () -> Unit,
+    navController: NavHostController,
     viewModel: TaskViewModel
 ) {
 
@@ -62,7 +66,7 @@ fun TaskListScreen(
 
     Scaffold(
         floatingActionButton = {
-            AddTaskFAB(onClick = { onAddScreen() })
+            AddTaskFAB(onClick = { navController.navigate(Screens.Add.route) })
         },
     ) { paddingValues ->
         Box(
@@ -78,7 +82,7 @@ fun TaskListScreen(
                 content = {
                     items(count = tasks.size) { index ->
                         CreateItemCard(
-                            onClickEdit = onEditScreen,
+                            onClickEdit = { navController.navigate(Screens.Update.route + "/${tasks[index].id}")},
                             task = tasks[index],
                             viewModel = viewModel
                         )

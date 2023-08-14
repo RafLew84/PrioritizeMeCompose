@@ -26,8 +26,9 @@ fun Navigation() {
     NavHost(navController = navController, startDestination = Screens.TaskList.route) {
         composable(route = Screens.TaskList.route){
             TaskListScreen (
-                onAddScreen = {navController.navigate(Screens.Add.route) },
-                onEditScreen = { navController.navigate(Screens.Update.route) },
+//                onAddScreen = {navController.navigate(Screens.Add.route) },
+//                onEditScreen = { navController.navigate(Screens.Update.route + "/$id") },
+                navController = navController,
                 viewModel = viewModel
             )
         }
@@ -39,8 +40,14 @@ fun Navigation() {
             )
         }
 
-        composable(route = Screens.Update.route){
-            UpdateTaskScreen { navController.popBackStack() }
+        composable(route = Screens.Update.route + "/{arg}"){
+            val arg = it.arguments?.getString("arg")
+            if (arg != null)
+                UpdateTaskScreen(
+                    id = arg,
+                    viewModel = viewModel,
+                    onHome = { navController.popBackStack() }
+                )
         }
     }
 }

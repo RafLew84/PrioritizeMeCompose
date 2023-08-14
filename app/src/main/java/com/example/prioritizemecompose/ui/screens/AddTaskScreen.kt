@@ -9,11 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
@@ -107,7 +105,7 @@ fun AddTaskScreen(onHome: () -> Unit, viewModel: TaskViewModel){
                             )
                             TextField(
                                 value = text.toString(),
-                                onValueChange = {},
+                                onValueChange = {task = task.copy(priority = selectedOption)},
                                 modifier = Modifier.padding(start = 16.dp),
                                 enabled = enabled.value,
                                 singleLine = true,
